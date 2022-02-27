@@ -3,9 +3,10 @@ const write = require("../utils/write");
 
 const getAllTasks = async (req, res) => {
  try {
-  const file = readFile();
-  res.status(201).send("Tasks Fetched"); 
+  const data = readFile();
+  res.status(200).send(data); 
  } catch (error) {
+   console.log(error)
   res.status(400).send(error);
  }
   
@@ -20,7 +21,7 @@ const createTask = async (req, res) => {
     };
     const newarray = [...read, task];
     const writeFile = write(newarray);
-    res.send("Task created"); 
+    res.status(200).send("Task created"); 
   } catch (error) {
     res.status(400).send(error);
   }
@@ -29,7 +30,7 @@ const createTask = async (req, res) => {
 const clearAllTasks = async (req, res, next) => {
   const newarray = [];
   const writeFile = write(newarray);
-  res.send("Tasks Cleared");
+  res.status(200).send("Tasks Cleared");
 };
 
 const deleteTask = async (req, res, next) => {
@@ -42,7 +43,7 @@ const deleteTask = async (req, res, next) => {
     });
     
     const writeFile = write(filtered);
-    res.send("delete Task");
+    res.status(200).send("delete Task");
     
   } catch (error) {
     res.status(500).send(error);
@@ -56,16 +57,18 @@ const updateTask = async (req, res, next) => {
     const id = req.params.id;
     let isFound = false;
     const title = req.body.title;
+    const description=req.body.description
     const newArr = data.map((task) => {
       if (task.id === id) {
         isFound = true;
-        return { ...task, title };
+        return { ...task, title ,description};
       }
       return task;
     });
     if (isFound) {
       const writeFile = write(newArr);
       res.send("update Task");
+
     } else {
       res.status(404).send("not found");
     }
